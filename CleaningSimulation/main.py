@@ -30,6 +30,8 @@ while dirtyCells > 0:
     iterations += 1
 
 print('Tiempo de ejecución:', str(datetime.timedelta(seconds=(time.time() - start_time))))
+print('Porcentaje de celdas limpias:', ((M*N-dirtyCells)/(M*N))*100)
+print('Número de movimientos:', iterations*AGENTS)
 
 all_grid = model.datacollector.get_model_vars_dataframe()
 
@@ -41,5 +43,5 @@ patch = plt.imshow(all_grid.iloc[0][0], cmap=plt.cm.binary)
 def animate(i):
     patch.set_data(all_grid.iloc[i][0])
 
-anim = animation.FuncAnimation(fig, animate, frames=iterations+2)
+anim = animation.FuncAnimation(fig, animate, frames=iterations+1)
 plt.show()

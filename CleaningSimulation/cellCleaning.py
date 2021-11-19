@@ -34,9 +34,7 @@ class CleaningModel(Model):
     def __init__(self, width, height, agents, dirtyCells):
         self.num_agents = agents
         self.dirty_cells = dirtyCells
-
         self.agentGrid = MultiGrid(width, height, True)
-
         self.dirtyGrid = np.zeros( (self.agentGrid.width, self.agentGrid.height), dtype=float)
         self.schedule = SimultaneousActivation(self)
 

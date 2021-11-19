@@ -56,4 +56,6 @@ class CleaningModel(Model):
     def step(self):
         self.datacollector.collect(self)
         self.schedule.step()
+        if self.dirty_cells == 0:
+            self.datacollector.collect(self)
 

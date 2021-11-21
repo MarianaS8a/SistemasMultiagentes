@@ -1,4 +1,5 @@
 """Mesa allows the use of agents and models"""
+from matplotlib.pyplot import step
 from mesa import Agent, Model
 from mesa.time import SimultaneousActivation
 from mesa.space import SingleGrid
@@ -32,27 +33,31 @@ class OrganizingAgent(Agent):
 
         possible_steps = self.model.agentGrid.get_neighborhood(
             self.pos,
-            moore=True,
+            moore=False,
             include_center=False)
         new_position = self.random.choice(possible_steps)
 
-        cellmates = self.model.agentGrid.get_cell_list_contents(new_position)
-        if len(cellmates) == 0:
-            self.model.agentGrid.move_agent(self, new_position)
-            
-            if self.hasBox == False and self.model.boxGrid[self.pos[0]][self.pos[1]] == 1:
-                self.model.boxGrid[self.pos[0]][self.pos[1]] = 0
-                self.hasBox = True
+        neighbours = self.model.agentGrid.get_neighbors(new_position, moore=False, include_center=False)
+        if len(neighbours) < 4:
+            cellmates = self.model.agentGrid.get_cell_list_contents(new_position)
+            if len(cellmates) == 0:
+                self.model.agentGrid.move_agent(self, new_position)
+                
+                if self.hasBox == False and self.model.boxGrid[self.pos[0]][self.pos[1]] == 1:
+                    self.model.boxGrid[self.pos[0]][self.pos[1]] = 0
+                    self.hasBox = True
 
-            elif self.hasBox == True and self.model.boxGrid[self.pos[0]][self.pos[1]] == -1:
-                self.model.boxGrid[self.pos[0]][self.pos[1]] = 2
-                self.hasBox = False
-                self.model.currentPiles -=1
+                elif self.hasBox == True and self.model.boxGrid[self.pos[0]][self.pos[1]] == -1:
+                    self.model.boxGrid[self.pos[0]][self.pos[1]] = 2
+                    self.hasBox = False
+                    self.model.currentPiles -=1
 
-            elif self.hasBox == True and 1 < self.model.boxGrid[self.pos[0]][self.pos[1]] < 5:
-                self.model.boxGrid[self.pos[0]][self.pos[1]] += 1
-                self.hasBox = False
-                self.model.currentPiles -=1
+                elif self.hasBox == True and 1 < self.model.boxGrid[self.pos[0]][self.pos[1]] < 5:
+                    self.model.boxGrid[self.pos[0]][self.pos[1]] += 1
+                    self.hasBox = False
+                    self.model.currentPiles -=1
+            else:
+                self.step()
 
         
 class WarehouseModel(Model):
